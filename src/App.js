@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import {useState} from "react"
+import React from 'react';
+import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
+import { Navbar, Nav } from 'react-bootstrap';
+import Projects from './Components/Project';
+import Tasks from './Components/Tasks';
+import ProjectForm from './Components/ProjectFrom/ProjectFrom';
+import "./App.css"
 
-function App() {
+const App = () => {
+  const [projects, setProjects] = useState([]);
+
+  const handleCreateProject = (projectName) => {
+    const newProject = {
+      id: Date.now(),
+      name: projectName,
+    };
+    setProjects([...projects, newProject]);
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <Navbar bg="Dark" expand="lg">
+          <Navbar.Brand href="/">Time Tracking App</Navbar.Brand>
+          <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto">
+              <Nav.Link as={Link} to="/">Projects</Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
+        <div className="container">
+          <Routes>
+            <Route path="/" exact component={Projects} />
+            <ProjectForm onCreateProject={handleCreateProject} />
+            <Route path="/projects/:projectId/tasks" component={Tasks} />
+          </Routes>
+        </div>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
